@@ -1,0 +1,40 @@
+{
+  "userdata": [
+    {
+      "benutzername": "user1",
+      "passwort": "password123",
+      "rolle": "user"
+    },
+    {
+      "benutzername": "admin1",
+      "passwort": "adminpass",
+      "rolle": "admin"
+    },
+    {
+      "benutzername": "user2",
+      "passwort": "pass123",
+      "rolle": "user"
+    },
+    {
+      "benutzername": "user3",
+      "passwort": "test456",
+      "rolle": "user"
+    },
+    {
+      "benutzername": "user1",
+      "rolle": "user"
+    },
+    {
+      "benutzername": "admin1",
+      "rolle": "admin"
+    },
+    {
+      "benutzername": "user2",
+      "rolle": "user"
+    },
+    {
+      "benutzername": "user3",
+      "rolle": "user"
+    }
+  ]
+}
