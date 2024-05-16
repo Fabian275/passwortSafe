@@ -1,3 +1,3 @@
 # passwortSafe
 
-Autor Fabian Bätscher & Jannis Beichlers
+Autor Fabian Bätscher & Jannis Beichler
