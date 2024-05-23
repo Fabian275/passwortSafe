@@ -21,11 +21,11 @@ let users = [
 ];
 
 const rows = [
-  createData("google.com", "fabian", "hjer"),
-  createData("abc.com", "fabian", "ergerg"),
-  createData("cdf.com", "fabian", "erg"),
-  createData("web.com", "fabian", "rthrytjh"),
-  createData("123.com", "fabian", "hjurtbh"),
+  { link: "google.com", username: "fabian", password: "hjer" },
+  { link: "abc.com", username: "fabian", password: "ergerg" },
+  { link: "cdf.com", username: "fabian", password: "erg" },
+  { link: "web.com", username: "fabian", password: "rthrytjh" },
+  { link: "123.com", username: "fabian", password: "hjurtbh" },
 ];
 
 // Anmelderoute
