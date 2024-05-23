@@ -17,7 +17,12 @@ function createData(link, username, password) {
 
 let users = [
   { id: 1, username: "user1", password: "password1" },
-  { id: 2, username: "user2", password: "password2" },
+  {
+    id: 2,
+    username: "user2",
+    password:
+      "6cf615d5bcaac778352a8f1f3360d23f02f34ec182e259897fd6ce485d7870d4", //password2
+  },
 ];
 
 const rows = [
@@ -28,11 +33,16 @@ const rows = [
   { link: "123.com", username: "fabian", password: "hjurtbh" },
 ];
 
+const hashPassword = (password) => {
+  return crypto.createHash("sha256").update(password).digest("hex");
+};
+
 // Anmelderoute
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
+  const hashedPassword = hashPassword(password);
   const user = users.find(
-    (u) => u.username === username && u.password === password
+    (u) => u.username === username && u.password === hashedPassword
   );
 
   if (user) {
