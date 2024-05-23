@@ -35,8 +35,8 @@ const PasswordManager: React.FC = () => {
     }));
   };
 
-  const maskPassword = (password: string) => {
-    return "•".repeat(password.length);
+  const maskPassword = () => {
+    return "•••••••••••";
   };
 
   return (
@@ -63,9 +63,7 @@ const PasswordManager: React.FC = () => {
                 </TableCell>
                 <TableCell align="right">{row.username}</TableCell>
                 <TableCell align="right">
-                  {visiblePasswords[row.link]
-                    ? row.password
-                    : maskPassword(row.password)}
+                  {visiblePasswords[row.link] ? row.password : maskPassword()}
                   <Button onClick={() => togglePasswordVisibility(row.link)}>
                     {visiblePasswords[row.link] ? "Hide" : "Show"}
                   </Button>
