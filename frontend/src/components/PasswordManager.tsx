@@ -1,5 +1,5 @@
 // src/components/PasswordManager.tsx
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -22,7 +22,12 @@ const rows = [
   createData("123.com", "fabian", "hjurtbh"),
 ];
 
-const PasswordManager: React.FC = () => {
+interface Props {
+  setLoggedIn: Dispatch<SetStateAction<boolean>>;
+}
+
+const PasswordManager = (props: Props) => {
+  const { setLoggedIn } = props;
   const navigate = useNavigate();
   const [visiblePasswords, setVisiblePasswords] = useState<{
     [key: string]: boolean;
@@ -39,9 +44,15 @@ const PasswordManager: React.FC = () => {
     return "•••••••••••";
   };
 
+  const logout = () => {
+    localStorage.removeItem("authToken");
+    setLoggedIn(false);
+    navigate("/");
+  };
+
   return (
     <div>
-      <h1>Passwort-Manager</h1>
+      <h1>Passwort-Manager</h1> <button onClick={logout}>Abmelden</button>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>

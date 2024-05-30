@@ -2,6 +2,7 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const crypto = require("crypto");
 
 const app = express();
 const PORT = 5001;
@@ -16,7 +17,12 @@ function createData(link, username, password) {
 }
 
 let users = [
-  { id: 1, username: "user1", password: "password1" },
+  {
+    id: 1,
+    username: "user1",
+    password:
+      "0b14d501a594442a01c6859541bcb3e8164d183d32937b851835442f69d5c94e", //password1
+  },
   {
     id: 2,
     username: "user2",
@@ -61,11 +67,16 @@ app.post("/login", (req, res) => {
 app.post("/register", (req, res) => {
   const { username, password } = req.body;
   const userExists = users.some((u) => u.username === username);
+  const hashedPassword = hashPassword(password);
 
   if (userExists) {
     res.status(400).json({ message: "Benutzername existiert bereits" });
   } else {
-    const newUser = { id: users.length + 1, username, password };
+    const newUser = {
+      id: users.length + 1,
+      username,
+      password: hashedPassword,
+    };
     users.push(newUser);
     const token = jwt.sign(
       { id: newUser.id, username: newUser.username },
