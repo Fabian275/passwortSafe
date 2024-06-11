@@ -27,6 +27,7 @@ const Login: React.FC<LoginProps> = ({ setLoggedIn }) => {
         username,
         password,
       });
+      console.log(response.data);
       const { token } = response.data;
       localStorage.setItem("authToken", token);
       setLoggedIn(true);

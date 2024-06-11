@@ -1,5 +1,4 @@
-// src/components/PasswordManager.tsx
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -9,18 +8,13 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-function createData(link: string, username: string, password: string) {
-  return { link, username, password };
+interface PasswordData {
+  link: string;
+  username: string;
+  password: string;
 }
-
-const rows = [
-  createData("google.com", "fabian", "hjer"),
-  createData("abc.com", "fabian", "ergerg"),
-  createData("cdf.com", "fabian", "erg"),
-  createData("web.com", "fabian", "rthrytjh"),
-  createData("123.com", "fabian", "hjurtbh"),
-];
 
 interface Props {
   setLoggedIn: Dispatch<SetStateAction<boolean>>;
@@ -29,9 +23,28 @@ interface Props {
 const PasswordManager = (props: Props) => {
   const { setLoggedIn } = props;
   const navigate = useNavigate();
+  const [passwords, setPasswords] = useState<PasswordData[]>([]);
   const [visiblePasswords, setVisiblePasswords] = useState<{
     [key: string]: boolean;
   }>({});
+
+  useEffect(() => {
+    const fetchPasswords = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const response = await axios.get("http://localhost:5002/getPasswords", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setPasswords(response.data);
+      } catch (error) {
+        console.error("Fehler beim Holen der Passwörter:", error);
+      }
+    };
+
+    fetchPasswords();
+  }, []);
 
   const togglePasswordVisibility = (link: string) => {
     setVisiblePasswords((prevState) => ({
@@ -64,7 +77,7 @@ const PasswordManager = (props: Props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row, index) => (
+            {passwords.map((row, index) => (
               <TableRow
                 key={row.link}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
