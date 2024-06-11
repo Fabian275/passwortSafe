@@ -1,5 +1,14 @@
 # passwortSafe
 
-Autor Fabian Bätscher & Jannis Beichlers
+Autor Fabian Bätscher & Jonathan Furrer & Jannis Beichlers
 
-Reflexion: 
+Backend
+
+- Wir haben 4 Endpoints. Login, register,protected und update
+
+  - login:
+  - register:
+  - protected:
+  - update:
+
+  Frondend
