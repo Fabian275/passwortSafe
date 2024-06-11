@@ -35,7 +35,10 @@ const App: React.FC = () => {
         />
         <Route path="/register" element={<Register />} />
         <Route element={<PrivateRoute />}>
-          <Route path="/password-manager" element={<PasswordManager />} />
+          <Route
+            path="/password-manager"
+            element={<PasswordManager setLoggedIn={setLoggedIn} />}
+          />
           <Route path="/update-profile" element={<UpdateProfile />} />
         </Route>
       </Routes>
