@@ -13,12 +13,24 @@ const ENCRYPTION_KEY = Buffer.from(
   "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
   "hex"
 );
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(express.json());
 const IV_LENGTH = 16;
 
-app.use(bodyParser.json());
-app.use(cors());
-app.use(cookieParser());
-app.use(express.json());
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
+
+
 
 const hashPassword = (password) => {
   return crypto.createHash("sha256").update(password).digest("hex");
@@ -47,32 +59,32 @@ const encryptValue = (value) => {
   return iv.toString("hex") + ":" + encrypted;
 };
 
-const rows = [
+let passwords = [
   {
-    link: "google.com",
-    username: encryptValue("fabian"),
-    password: encryptValue("hjer"),
+    userId: 1,
+    entries: [
+      {
+        link: "google.com",
+        username: encryptValue("user1name"),
+        password: encryptValue("password1"),
+      },
+      {
+        link: "abc.com",
+        username: encryptValue("user1name"),
+        password: encryptValue("password2"),
+      }
+    ]
   },
   {
-    link: "abc.com",
-    username: encryptValue("fabian"),
-    password: encryptValue("ergerg"),
-  },
-  {
-    link: "cdf.com",
-    username: encryptValue("fabian"),
-    password: encryptValue("erg"),
-  },
-  {
-    link: "web.com",
-    username: encryptValue("fabian"),
-    password: encryptValue("rthrytjh"),
-  },
-  {
-    link: "123.com",
-    username: encryptValue("fabian"),
-    password: encryptValue("hjurtbh"),
-  },
+    userId: 2,
+    entries: [
+      {
+        link: "web.com",
+        username: encryptValue("user2name"),
+        password: encryptValue("password3"),
+      }
+    ]
+  }
 ];
 
 const encryptionMasterPassword = (password) => {
@@ -109,6 +121,7 @@ function authenticateToken(req, res, next) {
   }
 }
 
+
 // Anmelderoute
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
@@ -129,7 +142,7 @@ app.post("/login", (req, res) => {
       secure: true,
       maxAge: 3600000,
     });
-    // res.json({ message: "Anmeldung erfolgreich", token });
+    res.json({ message: "Anmeldung erfolgreich", token });
   } else {
     res.status(401).json({ message: "Ungültige Anmeldedaten" });
   }
@@ -161,7 +174,7 @@ app.post("/register", (req, res) => {
       secure: true,
       maxAge: 3600000,
     });
-    // res.json({ message: "Registrierung erfolgreich", token });
+    res.json({ message: "Registrierung erfolgreich", token });
   }
 });
 
@@ -170,20 +183,35 @@ app.post("/addNewPassword", authenticateToken, (req, res) => {
   const { link, username, password } = req.body;
   const encryptedPassword = encryptValue(password);
   const encryptedUsername = encryptValue(username);
-  rows.push({ link, username: encryptedUsername, password: encryptedPassword });
+
+  const userPasswords = passwords.find(pw => pw.userId === req.user.id);
+  if (userPasswords) {
+    userPasswords.entries.push({ link, username: encryptedUsername, password: encryptedPassword });
+  } else {
+    passwords.push({
+      userId: req.user.id,
+      entries: [{ link, username: encryptedUsername, password: encryptedPassword }]
+    });
+  }
+
   res.json({ message: "Neues Passwort hinzugefügt" });
 });
 
 // get password
 app.get("/getPasswords", authenticateToken, (req, res) => {
   try {
-    const pwList = rows.map((row) => {
-      const rowUn = decryptValue(row.username);
-      const rowPw = decryptValue(row.password);
-      return { link: row.link, username: rowUn, password: rowPw };
-    });
+    const userPasswords = passwords.find(pw => pw.userId === req.user.id);
+    if (!userPasswords) {
+      return res.json([]);
+    }
 
-    res.json(pwList);
+    const decryptedPasswords = userPasswords.entries.map((entry) => ({
+      link: entry.link,
+      username: decryptValue(entry.username),
+      password: decryptValue(entry.password)
+    }));
+
+    res.json(decryptedPasswords);
   } catch (error) {
     res.status(500).json({
       message: "Fehler beim Entschlüsseln der Daten",

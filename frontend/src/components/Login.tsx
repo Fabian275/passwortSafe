@@ -23,10 +23,10 @@ const Login: React.FC<LoginProps> = ({ setLoggedIn }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://localhost:5002/login", {
+      const response = await axios.post("http://localhost:5001/login", {
         username,
         password,
-      });
+      },{withCredentials: true });
       console.log(response.data);
       const { token } = response.data;
       localStorage.setItem("authToken", token);
