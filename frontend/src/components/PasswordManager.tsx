@@ -31,6 +31,9 @@ interface Props {
 const PasswordManager = (props: Props) => {
   const { setLoggedIn } = props;
   const navigate = useNavigate();
+  const [link, setLink] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [passwords, setPasswords] = useState<PasswordData[]>([]);
   const [visiblePasswords, setVisiblePasswords] = useState<{
     [key: string]: boolean;
@@ -39,18 +42,18 @@ const PasswordManager = (props: Props) => {
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  useEffect(() => {
-    const fetchPasswords = async () => {
-      try {
-        const response = await axios.get("http://localhost:5001/getPasswords", {
-          withCredentials: true,
-        });
-        setPasswords(response.data);
-      } catch (error) {
-        console.error("Fehler beim Holen der Passwörter:", error);
-      }
-    };
+  const fetchPasswords = async () => {
+    try {
+      const response = await axios.get("http://localhost:5001/getPasswords", {
+        withCredentials: true,
+      });
+      setPasswords(response.data);
+    } catch (error) {
+      console.error("Fehler beim Holen der Passwörter:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchPasswords();
   }, []);
 
@@ -69,6 +72,29 @@ const PasswordManager = (props: Props) => {
     localStorage.removeItem("authToken");
     setLoggedIn(false);
     navigate("/");
+  };
+
+  const addNewPW = async (e: any) => {
+    console.log(e);
+    try {
+      if (link !== "" && username !== "" && password !== "") {
+        const response = await axios.post(
+          "http://localhost:5001/addNewPassword",
+          {
+            link,
+            username,
+            password,
+          },
+          { withCredentials: true }
+        );
+        fetchPasswords();
+        setLink("");
+        setUsername("");
+        setPassword("");
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -97,6 +123,8 @@ const PasswordManager = (props: Props) => {
                   id="outlined-basic"
                   label="Link hinzufügen"
                   variant="outlined"
+                  value={link}
+                  onChange={(e) => setLink(e.target.value)}
                 />
               </TableCell>
               <TableCell component="th" scope="row">
@@ -104,6 +132,8 @@ const PasswordManager = (props: Props) => {
                   id="outlined-basic"
                   label="Username hinzufügen"
                   variant="outlined"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </TableCell>
               <TableCell component="th" scope="row">
@@ -112,6 +142,8 @@ const PasswordManager = (props: Props) => {
                   label="Password"
                   variant="outlined"
                   type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -128,7 +160,9 @@ const PasswordManager = (props: Props) => {
                 />
               </TableCell>
               <TableCell component="th" scope="row">
-                <Button variant="contained">Hinzufügen</Button>
+                <Button variant="contained" type="button" onClick={addNewPW}>
+                  Hinzufügen
+                </Button>
               </TableCell>
             </TableRow>
             {passwords.map((row, index) => (
