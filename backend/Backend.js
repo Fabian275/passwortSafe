@@ -19,18 +19,15 @@ app.use(express.json());
 const IV_LENGTH = 16;
 
 const corsOptions = {
-  origin: 'http://localhost:3000',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  origin: "http://localhost:3000",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
-  optionsSuccessStatus: 204
+  optionsSuccessStatus: 204,
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
-
-
-
+app.options("*", cors(corsOptions));
 
 const hashPassword = (password) => {
   return crypto.createHash("sha256").update(password).digest("hex");
@@ -72,8 +69,8 @@ let passwords = [
         link: "abc.com",
         username: encryptValue("user1name"),
         password: encryptValue("password2"),
-      }
-    ]
+      },
+    ],
   },
   {
     userId: 2,
@@ -82,9 +79,9 @@ let passwords = [
         link: "web.com",
         username: encryptValue("user2name"),
         password: encryptValue("password3"),
-      }
-    ]
-  }
+      },
+    ],
+  },
 ];
 
 const encryptionMasterPassword = (password) => {
@@ -120,7 +117,6 @@ function authenticateToken(req, res, next) {
     res.status(401).json({ message: "Ungültiges Token" });
   }
 }
-
 
 // Anmelderoute
 app.post("/login", (req, res) => {
@@ -184,13 +180,19 @@ app.post("/addNewPassword", authenticateToken, (req, res) => {
   const encryptedPassword = encryptValue(password);
   const encryptedUsername = encryptValue(username);
 
-  const userPasswords = passwords.find(pw => pw.userId === req.user.id);
+  const userPasswords = passwords.find((pw) => pw.userId === req.user.id);
   if (userPasswords) {
-    userPasswords.entries.push({ link, username: encryptedUsername, password: encryptedPassword });
+    userPasswords.entries.push({
+      link,
+      username: encryptedUsername,
+      password: encryptedPassword,
+    });
   } else {
     passwords.push({
       userId: req.user.id,
-      entries: [{ link, username: encryptedUsername, password: encryptedPassword }]
+      entries: [
+        { link, username: encryptedUsername, password: encryptedPassword },
+      ],
     });
   }
 
@@ -200,7 +202,7 @@ app.post("/addNewPassword", authenticateToken, (req, res) => {
 // get password
 app.get("/getPasswords", authenticateToken, (req, res) => {
   try {
-    const userPasswords = passwords.find(pw => pw.userId === req.user.id);
+    const userPasswords = passwords.find((pw) => pw.userId === req.user.id);
     if (!userPasswords) {
       return res.json([]);
     }
@@ -208,7 +210,7 @@ app.get("/getPasswords", authenticateToken, (req, res) => {
     const decryptedPasswords = userPasswords.entries.map((entry) => ({
       link: entry.link,
       username: decryptValue(entry.username),
-      password: decryptValue(entry.password)
+      password: decryptValue(entry.password),
     }));
 
     res.json(decryptedPasswords);
@@ -220,17 +222,31 @@ app.get("/getPasswords", authenticateToken, (req, res) => {
   }
 });
 
-// Benutzerdaten aktualisieren
-app.put("/update", authenticateToken, (req, res) => {
-  const { username, password } = req.body;
-  const user = users.find((u) => u.id === req.user.id);
+app.put("/updatePassword", authenticateToken, (req, res) => {
+  const { id, link, username, password } = req.body;
 
-  if (user) {
-    if (username) user.username = username;
-    if (password) user.password = hashPassword(password);
-    res.json({ message: "Benutzerdaten aktualisiert" });
+  if (!link || !username || !password) {
+    return res
+      .status(400)
+      .json({ message: "Alle Felder müssen ausgefüllt werden." });
+  }
+
+  const userPasswords = passwords.find((user) => user.userId === req.user.id);
+
+  if (userPasswords) {
+    const entry = userPasswords.entries[id];
+    if (entry) {
+      entry.link = link;
+      entry.username = encryptValue(username);
+      entry.password = encryptValue(password);
+      res.json({ message: "Passwort aktualisiert", data: passwords });
+    } else {
+      res.status(404).json({ message: "Eintrag nicht gefunden" });
+    }
   } else {
-    res.status(404).json({ message: "Benutzer nicht gefunden" });
+    res
+      .status(404)
+      .json({ message: "Keine Passwörter für diesen Benutzer gefunden" });
   }
 });
 

@@ -1,4 +1,3 @@
-// src/components/Login.tsx
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -23,10 +22,14 @@ const Login: React.FC<LoginProps> = ({ setLoggedIn }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://localhost:5001/login", {
-        username,
-        password,
-      },{withCredentials: true });
+      const response = await axios.post(
+        "http://localhost:5001/login",
+        {
+          username,
+          password,
+        },
+        { withCredentials: true }
+      );
       console.log(response.data);
       const { token } = response.data;
       localStorage.setItem("authToken", token);

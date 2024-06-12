@@ -1,4 +1,3 @@
-// src/utils/auth.ts
 import jwt_decode from "jwt-decode";
 
 interface DecodedToken {

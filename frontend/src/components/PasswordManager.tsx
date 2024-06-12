@@ -17,6 +17,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Password, Visibility, VisibilityOff } from "@mui/icons-material";
+import Nav from "./Nav";
 
 interface PasswordData {
   link: string;
@@ -68,12 +69,6 @@ const PasswordManager = (props: Props) => {
     return "•••••••••••";
   };
 
-  const logout = () => {
-    localStorage.removeItem("authToken");
-    setLoggedIn(false);
-    navigate("/");
-  };
-
   const addNewPW = async (e: any) => {
     console.log(e);
     try {
@@ -99,10 +94,9 @@ const PasswordManager = (props: Props) => {
 
   return (
     <div>
+      <Nav title={"Passwort-Manager"} setLoggedIn={setLoggedIn} />
       <h1>Passwort-Manager</h1>
-      <Button variant="contained" onClick={logout}>
-        Abmelden
-      </Button>
+
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -167,7 +161,7 @@ const PasswordManager = (props: Props) => {
             </TableRow>
             {passwords.map((row, index) => (
               <TableRow
-                key={row.link}
+                key={index}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
@@ -183,7 +177,7 @@ const PasswordManager = (props: Props) => {
                 <TableCell>
                   <Button
                     variant="contained"
-                    onClick={() => navigate(`/passwordUpdate?id=${index}`)}
+                    onClick={() => navigate(`/update-profile/${index}`)}
                   >
                     Update
                   </Button>
