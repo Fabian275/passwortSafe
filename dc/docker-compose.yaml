@@ -5,7 +5,7 @@ services:
       context: ../frontend
       dockerfile: Dockerfile
     ports:
-      - 3001:3000
+      - 3000:3000
     volumes:
       - ../frontend:/app
   passwordsafe-api3:
@@ -13,6 +13,6 @@ services:
       context: ../backend
       dockerfile: Dockerfile
     ports:
-      - 5002:5001
+      - 5001:5001
     volumes:
       - ../backend:/backend

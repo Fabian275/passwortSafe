@@ -1,4 +1,3 @@
-// src/App.tsx
 import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
@@ -39,7 +38,10 @@ const App: React.FC = () => {
             path="/password-manager"
             element={<PasswordManager setLoggedIn={setLoggedIn} />}
           />
-          <Route path="/update-profile" element={<UpdateProfile />} />
+          <Route
+            path="/update-profile/:id"
+            element={<UpdateProfile setLoggedIn={setLoggedIn} />}
+          />
         </Route>
       </Routes>
     </Router>
