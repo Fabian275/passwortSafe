@@ -4,4 +4,4 @@ WORKDIR /backend
 COPY package.json package-lock.json ./
 RUN npm ci            
 COPY . .              
-CMD ["node", "/backend/Backend.js"]
+CMD ["node", "Backend.js"]
