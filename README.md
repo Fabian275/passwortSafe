@@ -38,7 +38,7 @@ Sicherheitsaspekte:
 
 - Registrieren
 
-  1. Registrierungs daten werden vom User ans backend gesendet.
+  1. Registrierungs daten werden vom User ans backend gesendet und es wird überprüft ob das Passwort genug stark ist.
   2. User name wird überprüft ob er bereits existiert.
   3. Wenn er existiert, gibt es einen Fehler code zurück. Wenn nicht geht es mit dem nächsten Schritt weiter.
   4. neue Id wird dem User gegeben.
