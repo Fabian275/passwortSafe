@@ -115,6 +115,8 @@ Relfexion:
   Das Projekt hat die Teamarbeit gestärkt und uns gezeigt, wie man ein Passwort und diese Informationen am besten sichern kann. z. B.
   SQL Injektion, Schutz etc. Wir hätten uns bei der Planung etwas mehr Gedanken machen müssen, aber auch trotzdem haben wir durch Fleiss und effektives arbeiten unser Projekt noch fertig geschafft.
 
-- Jonathan: Ich fand das Projekt sehr spannend auch wen ich erst später dazu kam. Ich habe trozdem sehr viel neuse gelernt auf welche dinge man alles achten muss um die Passwörter möglichst sicher speichern zu können und konnte auch nochmals mir node js etwas genauer anschauen. Zudem fand ich auch das wir uns sehr gut absprechen konnten wer für was zuständig ist.
+- Jonathan:
+  Ich fand das Projekt sehr spannend auch wen ich erst später dazu kam. Ich habe trozdem sehr viel neuse gelernt auf welche dinge man alles achten muss um die Passwörter möglichst sicher speichern zu können und konnte auch nochmals mir node js etwas genauer anschauen. Zudem fand ich auch das wir uns sehr gut absprechen konnten wer für was zuständig ist.
 
-- Fabian: Ich fand das Projekt sehr spannend und habe sehr viel über das Thema Verschlüsselung, hashing und Docker gelernt. Zudem habe ich auch gelernt, wie man ein Login sicher machen kann. Ich hatte am Anfang etwas Schwierigkeiten mit den CORS und bekam immer wieder Errors. Dies konnte ich aber gut lösen. Am Anfang des Projekts habe ich alles dockerisiert, um alles einfach starten zu können.
+- Fabian:
+  Ich fand das Projekt sehr spannend und habe sehr viel über das Thema Verschlüsselung, hashing und Docker gelernt. Zudem habe ich auch gelernt, wie man ein Login sicher machen kann. Ich hatte am Anfang etwas Schwierigkeiten mit den CORS und bekam immer wieder Errors. Dies konnte ich aber gut lösen. Am Anfang des Projekts habe ich alles dockerisiert, um alles einfach starten zu können.
