@@ -64,5 +64,6 @@ Relfexion:
   Ich fand das Projekt eine gelugene Arbeit. Wir konnten selber planen, wie wir das projekt aufbauen wollen und mit welcher Sprache wir es machen. Diese  
   Projekt hat die Team Arbeit gestärkt und uns gezeigt, wie man ein Passwort und desen Infos ambesten sicher kann. Zb SQl Injections schützen etc. Wir hätten uns bei der Planung etwas mehr gedanken machen müssen aber auch trozdem haben wir durch fleiss und effektives arbeiten unser projekt noch fertig geschafft.
 
-- Jonathan:
+- Jonathan: Ich fand das Projekt sehr spannend auch wen ich erst später dazu kam. Ich habe trozdem sehr viel neuse gelernt auf welche dinge man alles achten muss um die Passwörter möglichst sicher speichern zu können und konnte auch nochmals mir node js etwas genauer anschauen. Zudem fand ich auch das wir uns sehr gut absprechen konnten wer für was zuständig ist.
+
 - Fabian:
