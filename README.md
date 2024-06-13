@@ -2,6 +2,56 @@
 
 Author Fabian Bätscher & Jonathan Furrer & Jannis Beichlers
 
+Sicherheitsaspekte:
+
+- Login:
+
+  1. user schickt login daten and das Backend
+  2. Backend hashed Passwort mit Sha-256 und zusätzlich mit MD-5.
+  3. Backend überprüft Hash.
+  4. Wenn login erfolgreich bekommt man ein Autentication token und ein normales token mit dem MD-5 Hash.
+  5. User ist eingeloggt.
+
+- Neues Passwort hinzufügen:
+
+  1. User gibt daten für neues Passwort ein.
+  2. Backend holt MD-5 Hash vom token.
+  3. Verschlüsselt die Daten von dem User mit dem MD-5 hash als Key.
+  4. Daten werden gespeichert.
+
+- Passwort anzeigen:
+
+  1. Überprüfen ob ein gültiges Autentificierungs token existiert.
+  2. Id vom aktuellen User wird geholt.
+  3. Alle Passwörter von der aktuellen user holen.
+  4. MD-5 Hash von dem token holen
+  5. Mit dem MD-5 Hash als key Passwörter entschlüsseln.
+  6. Entschlüsselte Daten ans Frontend senden.
+
+- Passwort Updaten:
+
+  1. Id vom aktuellen Eintrag wird geholt.
+  2. User gibt neue daten ein um das Passwort zu ändern.
+  3. Backend holt MD-5 Hash vom token.
+  4. Verschlüsselt die Daten von dem User mit dem MD-5 hash als Key.
+  5. Daten werden gespeichert.
+
+- Registrieren
+
+  1. Registrierungs daten werden vom User ans backend gesendet.
+  2. User name wird überprüft ob er bereits existiert.
+  3. Wenn er existiert, gibt es einen Fehler code zurück. Wenn nicht geht es mit dem nächsten Schritt weiter.
+  4. neue Id wird dem User gegeben.
+  5. Passwort wir mit SHA-256 gehashed.
+  6. Id + UserName + Passwort wird in der Datenbank gespeichert.
+  7. Mit dem Passwort wird ein MD-5 Hash erstellt.
+  8. Wenn eingeloggt bekommt man ein Autentication token und ein normales token mit dem MD-5 Hash.
+  9. User ist eingeloggt und neu registriert.
+
+- Logout
+
+  1.  Löschen alle tokens
+
 Installation
 
 - Backend: npm ci (für clean Installation)
