@@ -18,8 +18,8 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ setLoggedIn }) => {
-  const [username, setUsername] = useState("user2");
-  const [password, setPassword] = useState("password2");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = React.useState(false);
@@ -74,7 +74,8 @@ const Login: React.FC<LoginProps> = ({ setLoggedIn }) => {
           />
           <TextField
             id="outlined-adornment-password"
-            label="Password"
+            label="Passwort"
+            required
             variant="outlined"
             margin="normal"
             fullWidth

@@ -98,7 +98,8 @@ const Register: React.FC = () => {
 
           <TextField
             id="outlined-adornment-password"
-            label="Password"
+            label="Passwort"
+            required
             variant="outlined"
             margin="normal"
             fullWidth
@@ -122,9 +123,10 @@ const Register: React.FC = () => {
 
           <TextField
             id="outlined-adornment-confirmPassword"
-            label="ConfirmPassword"
+            label="Passwort bestätigen"
             variant="outlined"
             margin="normal"
+            required
             fullWidth
             type={showConfirmPassword ? "text" : "password"}
             value={confirmPassword}

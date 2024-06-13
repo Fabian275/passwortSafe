@@ -102,8 +102,8 @@ const PasswordManager = (props: Props) => {
           <TableHead>
             <TableRow>
               <TableCell>Link</TableCell>
-              <TableCell>Username</TableCell>
-              <TableCell>Password</TableCell>
+              <TableCell>Benutzername</TableCell>
+              <TableCell>Passwort</TableCell>
               <TableCell>Anpassen</TableCell>
             </TableRow>
           </TableHead>
@@ -124,7 +124,7 @@ const PasswordManager = (props: Props) => {
               <TableCell component="th" scope="row">
                 <TextField
                   id="outlined-basic"
-                  label="Username hinzufügen"
+                  label="Benutzername hinzufügen"
                   variant="outlined"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -133,7 +133,7 @@ const PasswordManager = (props: Props) => {
               <TableCell component="th" scope="row">
                 <TextField
                   id="outlined-adornment-password"
-                  label="Password"
+                  label="Passwort hinzufügen"
                   variant="outlined"
                   type={showPassword ? "text" : "password"}
                   value={password}
@@ -171,7 +171,7 @@ const PasswordManager = (props: Props) => {
                 <TableCell>
                   {visiblePasswords[row.link] ? row.password : maskPassword()}
                   <Button onClick={() => togglePasswordVisibility(row.link)}>
-                    {visiblePasswords[row.link] ? "Hide" : "Show"}
+                    {visiblePasswords[row.link] ? "Verstecken" : "Zeigen"}
                   </Button>
                 </TableCell>
                 <TableCell>
@@ -179,7 +179,7 @@ const PasswordManager = (props: Props) => {
                     variant="contained"
                     onClick={() => navigate(`/update-profile/${index}`)}
                   >
-                    Update
+                    Ändern
                   </Button>
                 </TableCell>
               </TableRow>
