@@ -56,12 +56,12 @@ let passwords = [
     userId: 1,
     entries: [
       {
-        link: "google.com",
+        link: encryptValue("google.com", "7c6a180b36896a0a8c02787eeafb0e4c"),
         username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
         password: encryptValue("password1", "7c6a180b36896a0a8c02787eeafb0e4c"),
       },
       {
-        link: "abc.com",
+        link: encryptValue("abc.com", "7c6a180b36896a0a8c02787eeafb0e4c"),
         username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
         password: encryptValue("password2", "7c6a180b36896a0a8c02787eeafb0e4c"),
       },
@@ -71,7 +71,7 @@ let passwords = [
     userId: 2,
     entries: [
       {
-        link: "web.com",
+        link: encryptValue("web.com", "6cb75f652a9b52798eb6cf2201057c73"),
         username: encryptValue("user2name", "6cb75f652a9b52798eb6cf2201057c73"),
         password: encryptValue("password3", "6cb75f652a9b52798eb6cf2201057c73"),
       },
@@ -183,11 +183,12 @@ app.post("/addNewPassword", authenticateToken, (req, res) => {
   const key = user.key;
   const encryptedPassword = encryptValue(password, key);
   const encryptedUsername = encryptValue(username, key);
+  const encryptedLink = encryptValue(link, key);
 
   const userPasswords = passwords.find((pw) => pw.userId === req.user.id);
   if (userPasswords) {
     userPasswords.entries.push({
-      link,
+      link: encryptedLink,
       username: encryptedUsername,
       password: encryptedPassword,
     });
@@ -195,7 +196,11 @@ app.post("/addNewPassword", authenticateToken, (req, res) => {
     passwords.push({
       userId: req.user.id,
       entries: [
-        { link, username: encryptedUsername, password: encryptedPassword },
+        {
+          link: encryptedLink,
+          username: encryptedUsername,
+          password: encryptedPassword,
+        },
       ],
     });
   }
@@ -214,7 +219,7 @@ app.get("/getPasswords", authenticateToken, (req, res) => {
       return res.json([]);
     }
     const decryptedPasswords = userPasswords.entries.map((entry) => ({
-      link: entry.link,
+      link: decryptValue(entry.link, key),
       username: decryptValue(entry.username, key),
       password: decryptValue(entry.password, key),
     }));
@@ -246,7 +251,7 @@ app.put("/updatePassword", authenticateToken, (req, res) => {
   if (userPasswords) {
     const entry = userPasswords.entries[id];
     if (entry) {
-      entry.link = link;
+      entry.link = encryptValue(link, key);
       entry.username = encryptValue(username, key);
       entry.password = encryptValue(password, key);
       res.json({ message: "Passwort aktualisiert", data: passwords });
