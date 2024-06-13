@@ -61,8 +61,9 @@ Frontend
 Relfexion:
 
 - Jannis:
-  Ich fand das Projekt eine gelugene Arbeit. Wir konnten selber planen, wie wir das projekt aufbauen wollen und mit welcher Sprache wir es machen. Diese  
-  Projekt hat die Team Arbeit gestärkt und uns gezeigt, wie man ein Passwort und desen Infos ambesten sicher kann. Zb SQl Injections schützen etc. Wir hätten uns bei der Planung etwas mehr gedanken machen müssen aber auch trozdem haben wir durch fleiss und effektives arbeiten unser projekt noch fertig geschafft.
+  Ich fand das Projekt eine gelungene Arbeit. Wir konnten selber planen, wie wir das Projekt aufbauen wollen und mit welcher Sprache wir es machen. Diese  
+  Das Projekt hat die Teamarbeit gestärkt und uns gezeigt, wie man ein Passwort und diese Informationen am besten sichern kann. z. B.
+  SQL Injektion, Schutz etc. Wir hätten uns bei der Planung etwas mehr Gedanken machen müssen, aber auch trotzdem haben wir durch Fleiss und effektives arbeiten unser Projekt noch fertig geschafft.
 
 - Jonathan:
 - Fabian:
