@@ -1,6 +1,6 @@
 # passwortSafe
 
-Author Fabian Bätscher & Jonathan Furrer & Jannis Beichlers
+Author Fabian Bätscher & Jonathan Furrer & Jannis Beichler
 
 Sicherheitsaspekte:
 
