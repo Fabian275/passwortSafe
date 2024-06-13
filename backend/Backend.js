@@ -48,9 +48,9 @@ let users = [
 let encryptionMasterPasswordHash = null;
 
 // Funktion zum Verschlüsseln eines Werts
-const encryptValue = (value) => {
+const encryptValue = (value, key) => {
   let iv = crypto.randomBytes(IV_LENGTH);
-  let cipher = crypto.createCipheriv("aes-256-cbc", ENCRYPTION_KEY, iv);
+  let cipher = crypto.createCipheriv("aes-256-cbc", key, iv);
   let encrypted = cipher.update(value, "utf8", "hex");
   encrypted += cipher.final("hex");
   return iv.toString("hex") + ":" + encrypted;
@@ -62,13 +62,13 @@ let passwords = [
     entries: [
       {
         link: "google.com",
-        username: encryptValue("user1name"),
-        password: encryptValue("password1"),
+        username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        password: encryptValue("password1", "7c6a180b36896a0a8c02787eeafb0e4c"),
       },
       {
         link: "abc.com",
-        username: encryptValue("user1name"),
-        password: encryptValue("password2"),
+        username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        password: encryptValue("password2", "7c6a180b36896a0a8c02787eeafb0e4c"),
       },
     ],
   },
@@ -77,8 +77,8 @@ let passwords = [
     entries: [
       {
         link: "web.com",
-        username: encryptValue("user2name"),
-        password: encryptValue("password3"),
+        username: encryptValue("user2name", "6cb75f652a9b52798eb6cf2201057c73"),
+        password: encryptValue("password3", "6cb75f652a9b52798eb6cf2201057c73"),
       },
     ],
   },
@@ -89,14 +89,14 @@ const encryptionMasterPassword = (password) => {
 };
 
 // Funktion zum Entschlüsseln eines Werts
-const decryptValue = (value) => {
+const decryptValue = (value, key) => {
   let textParts = value.split(":");
   let iv = Buffer.from(textParts.shift(), "hex");
   if (iv.length !== IV_LENGTH) {
     throw new Error("Invalid IV length");
   }
   let encryptedText = Buffer.from(textParts.join(":"), "hex");
-  let decipher = crypto.createDecipheriv("aes-256-cbc", ENCRYPTION_KEY, iv);
+  let decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
   let decrypted = decipher.update(encryptedText, "hex", "utf8");
   decrypted += decipher.final("utf8");
   return decrypted;
@@ -128,7 +128,11 @@ app.post("/login", (req, res) => {
 
   if (user) {
     const token = jwt.sign(
-      { id: user.id, username: user.username, key: encryptionMasterPassword(password) },
+      {
+        id: user.id,
+        username: user.username,
+        key: encryptionMasterPassword(password),
+      },
       SECRET_KEY,
       { expiresIn: "1h" }
     );
@@ -159,11 +163,14 @@ app.post("/register", (req, res) => {
     };
     users.push(newUser);
     const token = jwt.sign(
-      { id: newUser.id, username: newUser.username },
+      {
+        id: newUser.id,
+        username: newUser.username,
+        key: encryptionMasterPassword(password),
+      },
       SECRET_KEY,
       { expiresIn: "1h" }
     );
-    encryptionMasterPasswordHash = encryptionMasterPassword(password);
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
@@ -176,8 +183,11 @@ app.post("/register", (req, res) => {
 // add new password
 app.post("/addNewPassword", authenticateToken, (req, res) => {
   const { link, username, password } = req.body;
-  const encryptedPassword = encryptValue(password);
-  const encryptedUsername = encryptValue(username);
+  const { user } = req;
+
+  const key = user.key;
+  const encryptedPassword = encryptValue(password, key);
+  const encryptedUsername = encryptValue(username, key);
 
   const userPasswords = passwords.find((pw) => pw.userId === req.user.id);
   if (userPasswords) {
@@ -200,16 +210,19 @@ app.post("/addNewPassword", authenticateToken, (req, res) => {
 
 // get password
 app.get("/getPasswords", authenticateToken, (req, res) => {
+  const { user } = req;
+
+  const key = user.key;
   try {
     const userPasswords = passwords.find((pw) => pw.userId === req.user.id);
     if (!userPasswords) {
       return res.json([]);
     }
-
+    console.log(passwords[0].entries[0].password);
     const decryptedPasswords = userPasswords.entries.map((entry) => ({
       link: entry.link,
-      username: decryptValue(entry.username),
-      password: decryptValue(entry.password),
+      username: decryptValue(entry.username, key),
+      password: decryptValue(entry.password, key),
     }));
 
     res.json(decryptedPasswords);
@@ -223,6 +236,9 @@ app.get("/getPasswords", authenticateToken, (req, res) => {
 
 app.put("/updatePassword", authenticateToken, (req, res) => {
   const { id, link, username, password } = req.body;
+  const { user } = req;
+
+  const key = user.key;
 
   if (!link || !username || !password) {
     return res
@@ -236,8 +252,8 @@ app.put("/updatePassword", authenticateToken, (req, res) => {
     const entry = userPasswords.entries[id];
     if (entry) {
       entry.link = link;
-      entry.username = encryptValue(username);
-      entry.password = encryptValue(password);
+      entry.username = encryptValue(username, key);
+      entry.password = encryptValue(password, key);
       res.json({ message: "Passwort aktualisiert", data: passwords });
     } else {
       res.status(404).json({ message: "Eintrag nicht gefunden" });
@@ -247,6 +263,11 @@ app.put("/updatePassword", authenticateToken, (req, res) => {
       .status(404)
       .json({ message: "Keine Passwörter für diesen Benutzer gefunden" });
   }
+});
+
+app.post("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.json({ message: "Logged out successfully" });
 });
 
 app.listen(PORT, () => {

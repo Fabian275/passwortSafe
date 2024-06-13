@@ -24,10 +24,14 @@ const Register: React.FC = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5001/register", {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:5001/register",
+        {
+          username,
+          password,
+        },
+        { withCredentials: true }
+      );
       const { token } = response.data;
       localStorage.setItem("authToken", token);
       navigate("/password-manager");

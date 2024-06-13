@@ -1,3 +1,4 @@
+import { Cookie } from "@mui/icons-material";
 import {
   AppBar,
   Toolbar,
@@ -9,6 +10,7 @@ import {
 } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 interface Props {
   setLoggedIn: Dispatch<SetStateAction<boolean>>;
@@ -19,10 +21,25 @@ interface Props {
 const Nav = (props: Props) => {
   const navigate = useNavigate();
   const { setLoggedIn, title, home } = props;
-  const logout = () => {
-    localStorage.removeItem("authToken");
-    setLoggedIn(false);
-    navigate("/");
+  const logout = async () => {
+    try {
+      // Sende eine Anfrage an den Server, um das Token-Cookie zu löschen
+      await axios.post(
+        "http://localhost:5001/logout",
+        {},
+        { withCredentials: true }
+      );
+
+      // Lösche das Token-Cookie auf dem Client
+      document.cookie =
+        "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      localStorage.removeItem("authToken");
+      setLoggedIn(false);
+      navigate("/");
+      // Umleitung auf die Login-Seite
+    } catch (error) {
+      console.error("Logout fehlgeschlagen:", error);
+    }
   };
   return (
     <Box sx={{ display: "flex" }}>
