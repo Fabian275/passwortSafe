@@ -128,11 +128,10 @@ app.post("/login", (req, res) => {
 
   if (user) {
     const token = jwt.sign(
-      { id: user.id, username: user.username },
+      { id: user.id, username: user.username, key: encryptionMasterPassword(password) },
       SECRET_KEY,
       { expiresIn: "1h" }
     );
-    encryptionMasterPasswordHash = encryptionMasterPassword(password);
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
