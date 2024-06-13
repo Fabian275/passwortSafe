@@ -1,6 +1,6 @@
 # passwortSafe
 
-Autor Fabian Bätscher & Jonathan Furrer & Jannis Beichlers
+Author Fabian Bätscher & Jonathan Furrer & Jannis Beichlers
 
 Backend
 
@@ -11,4 +11,4 @@ Backend
   - protected:
   - update:
 
-  Frondend
+  Frontend
