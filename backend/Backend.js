@@ -9,10 +9,7 @@ const app = express();
 const PORT = 5001;
 const SECRET_KEY =
   "a12f3a059f1fe7fce1b7e1539bb776fc083e6fce8e88998c708ca12a6d8e30d3";
-const ENCRYPTION_KEY = Buffer.from(
-  "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
-  "hex"
-);
+
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(express.json());
@@ -45,9 +42,7 @@ let users = [
   },
 ];
 
-let encryptionMasterPasswordHash = null;
-
-// Funktion zum Verschlüsseln eines Werts
+// Verschlüsseln
 const encryptValue = (value, key) => {
   let iv = crypto.randomBytes(IV_LENGTH);
   let cipher = crypto.createCipheriv("aes-256-cbc", key, iv);
@@ -88,7 +83,7 @@ const encryptionMasterPassword = (password) => {
   return crypto.createHash("md5").update(password).digest("hex");
 };
 
-// Funktion zum Entschlüsseln eines Werts
+// Entschlüsseln
 const decryptValue = (value, key) => {
   let textParts = value.split(":");
   let iv = Buffer.from(textParts.shift(), "hex");
@@ -218,7 +213,6 @@ app.get("/getPasswords", authenticateToken, (req, res) => {
     if (!userPasswords) {
       return res.json([]);
     }
-    console.log(passwords[0].entries[0].password);
     const decryptedPasswords = userPasswords.entries.map((entry) => ({
       link: entry.link,
       username: decryptValue(entry.username, key),
@@ -234,6 +228,7 @@ app.get("/getPasswords", authenticateToken, (req, res) => {
   }
 });
 
+//update password
 app.put("/updatePassword", authenticateToken, (req, res) => {
   const { id, link, username, password } = req.body;
   const { user } = req;
@@ -265,6 +260,7 @@ app.put("/updatePassword", authenticateToken, (req, res) => {
   }
 });
 
+//logout
 app.post("/logout", (req, res) => {
   res.clearCookie("token");
   res.json({ message: "Logged out successfully" });
