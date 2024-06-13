@@ -8,7 +8,10 @@ import {
   Container,
   Box,
   Link,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
+import { VisibilityOff, Visibility } from "@mui/icons-material";
 
 interface LoginProps {
   setLoggedIn: (loggedIn: boolean) => void;
@@ -19,6 +22,9 @@ const Login: React.FC<LoginProps> = ({ setLoggedIn }) => {
   const [password, setPassword] = useState("password2");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleLogin = async () => {
     try {
@@ -67,16 +73,27 @@ const Login: React.FC<LoginProps> = ({ setLoggedIn }) => {
             onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
+            id="outlined-adornment-password"
+            label="Password"
+            variant="outlined"
             margin="normal"
-            required
             fullWidth
-            name="password"
-            label="Passwort"
-            type="password"
-            id="password"
-            autoComplete="current-password"
+            type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
           <Button
             fullWidth

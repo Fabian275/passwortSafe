@@ -8,18 +8,41 @@ import {
   Container,
   Box,
   Link,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
+import { VisibilityOff, Visibility } from "@mui/icons-material";
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowConfirmPassword = () =>
+    setShowConfirmPassword((show) => !show);
+
   const navigate = useNavigate();
+
+  const validatePassword = (password: string) => {
+    const regex =
+      /^(?=(.*[a-z]){3,})(?=(.*[A-Z]){2,})(?=(.*[0-9]){2,})(?=(.*[!@#$%^&*()\-__+.]){1,}).{8,}$/;
+    return regex.test(password);
+  };
 
   const handleRegister = async () => {
     if (password !== confirmPassword) {
       setMessage("Passwörter stimmen nicht überein");
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      setMessage(
+        "Das Passwort erfüllt nicht die Anforderungen (mindestens 8 Zeichen lang, mindestens 3 klein Buchstaben, mindestens 2 Grossbuchstaben, mindestens 2 Zahlen, mindestens 1 Sonderzeichen)"
+      );
       return;
     }
 
@@ -72,29 +95,53 @@ const Register: React.FC = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
+
           <TextField
+            id="outlined-adornment-password"
+            label="Password"
+            variant="outlined"
             margin="normal"
-            required
             fullWidth
-            name="password"
-            label="Passwort"
-            type="password"
-            id="password"
-            autoComplete="new-password"
+            type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
+
           <TextField
+            id="outlined-adornment-confirmPassword"
+            label="ConfirmPassword"
+            variant="outlined"
             margin="normal"
-            required
             fullWidth
-            name="confirmPassword"
-            label="Passwort bestätigen"
-            type="password"
-            id="confirmPassword"
-            autoComplete="new-password"
+            type={showConfirmPassword ? "text" : "password"}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle confirmPassword visibility"
+                    onClick={handleClickShowConfirmPassword}
+                    edge="end"
+                  >
+                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
           <Button
             fullWidth
