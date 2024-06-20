@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const crypto = require("crypto");
 const cookieParser = require("cookie-parser");
+const { link } = require("fs");
 
 const app = express();
 const PORT = 5001;
@@ -65,6 +66,81 @@ let passwords = [
         username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
         password: encryptValue("password2", "7c6a180b36896a0a8c02787eeafb0e4c"),
       },
+      {
+        link: encryptValue("steam.com", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        password: encryptValue("password3", "7c6a180b36896a0a8c02787eeafb0e4c"),
+      },
+      {
+        link: encryptValue("post.com", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        password: encryptValue("password4", "7c6a180b36896a0a8c02787eeafb0e4c"),
+      },
+      {
+        link: encryptValue("example1.com", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        password: encryptValue("password5", "7c6a180b36896a0a8c02787eeafb0e4c"),
+      },
+      {
+        link: encryptValue("example2.com", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        password: encryptValue("password6", "7c6a180b36896a0a8c02787eeafb0e4c"),
+      },
+      {
+        link: encryptValue("example3.com", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        password: encryptValue("password7", "7c6a180b36896a0a8c02787eeafb0e4c"),
+      },
+      {
+        link: encryptValue("example4.com", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        password: encryptValue("password8", "7c6a180b36896a0a8c02787eeafb0e4c"),
+      },
+      {
+        link: encryptValue("example5.com", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        password: encryptValue("password9", "7c6a180b36896a0a8c02787eeafb0e4c"),
+      },
+      {
+        link: encryptValue("example6.com", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        password: encryptValue(
+          "password10",
+          "7c6a180b36896a0a8c02787eeafb0e4c"
+        ),
+      },
+      {
+        link: encryptValue("example7.com", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        password: encryptValue(
+          "password11",
+          "7c6a180b36896a0a8c02787eeafb0e4c"
+        ),
+      },
+      {
+        link: encryptValue("example8.com", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        password: encryptValue(
+          "password12",
+          "7c6a180b36896a0a8c02787eeafb0e4c"
+        ),
+      },
+      {
+        link: encryptValue("example9.com", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        password: encryptValue(
+          "password13",
+          "7c6a180b36896a0a8c02787eeafb0e4c"
+        ),
+      },
+      {
+        link: encryptValue("example10.com", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        password: encryptValue(
+          "password14",
+          "7c6a180b36896a0a8c02787eeafb0e4c"
+        ),
+      },
     ],
   },
   {
@@ -74,6 +150,71 @@ let passwords = [
         link: encryptValue("web.com", "6cb75f652a9b52798eb6cf2201057c73"),
         username: encryptValue("user2name", "6cb75f652a9b52798eb6cf2201057c73"),
         password: encryptValue("password3", "6cb75f652a9b52798eb6cf2201057c73"),
+      },
+      {
+        link: encryptValue("google.com", "6cb75f652a9b52798eb6cf2201057c73"),
+        username: encryptValue("user2name", "6cb75f652a9b52798eb6cf2201057c73"),
+        password: encryptValue("password5", "6cb75f652a9b52798eb6cf2201057c73"),
+      },
+      {
+        link: encryptValue("facebook.com", "6cb75f652a9b52798eb6cf2201057c73"),
+        username: encryptValue("user2name", "6cb75f652a9b52798eb6cf2201057c73"),
+        password: encryptValue("password6", "6cb75f652a9b52798eb6cf2201057c73"),
+      },
+      {
+        link: encryptValue("twitter.com", "6cb75f652a9b52798eb6cf2201057c73"),
+        username: encryptValue("user2name", "6cb75f652a9b52798eb6cf2201057c73"),
+        password: encryptValue("password7", "6cb75f652a9b52798eb6cf2201057c73"),
+      },
+      {
+        link: encryptValue("linkedin.com", "6cb75f652a9b52798eb6cf2201057c73"),
+        username: encryptValue("user2name", "6cb75f652a9b52798eb6cf2201057c73"),
+        password: encryptValue("password8", "6cb75f652a9b52798eb6cf2201057c73"),
+      },
+      {
+        link: encryptValue("instagram.com", "6cb75f652a9b52798eb6cf2201057c73"),
+        username: encryptValue("user2name", "6cb75f652a9b52798eb6cf2201057c73"),
+        password: encryptValue("password9", "6cb75f652a9b52798eb6cf2201057c73"),
+      },
+      {
+        link: encryptValue("youtube.com", "6cb75f652a9b52798eb6cf2201057c73"),
+        username: encryptValue("user2name", "6cb75f652a9b52798eb6cf2201057c73"),
+        password: encryptValue(
+          "password10",
+          "6cb75f652a9b52798eb6cf2201057c73"
+        ),
+      },
+      {
+        link: encryptValue("reddit.com", "6cb75f652a9b52798eb6cf2201057c73"),
+        username: encryptValue("user2name", "6cb75f652a9b52798eb6cf2201057c73"),
+        password: encryptValue(
+          "password11",
+          "6cb75f652a9b52798eb6cf2201057c73"
+        ),
+      },
+      {
+        link: encryptValue("pinterest.com", "6cb75f652a9b52798eb6cf2201057c73"),
+        username: encryptValue("user2name", "6cb75f652a9b52798eb6cf2201057c73"),
+        password: encryptValue(
+          "password12",
+          "6cb75f652a9b52798eb6cf2201057c73"
+        ),
+      },
+      {
+        link: encryptValue("amazon.com", "6cb75f652a9b52798eb6cf2201057c73"),
+        username: encryptValue("user2name", "6cb75f652a9b52798eb6cf2201057c73"),
+        password: encryptValue(
+          "password13",
+          "6cb75f652a9b52798eb6cf2201057c73"
+        ),
+      },
+      {
+        link: encryptValue("ebay.com", "6cb75f652a9b52798eb6cf2201057c73"),
+        username: encryptValue("user2name", "6cb75f652a9b52798eb6cf2201057c73"),
+        password: encryptValue(
+          "password14",
+          "6cb75f652a9b52798eb6cf2201057c73"
+        ),
       },
     ],
   },
