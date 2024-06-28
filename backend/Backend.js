@@ -147,12 +147,14 @@ app.post("/register", (req, res) => {
   const { username, password } = req.body;
   const userExists = users.some((u) => u.username === username);
   const hashedPassword = hashPassword(password);
+  let maxId = Math.max(...users.map(user => user.id));
+
 
   if (userExists) {
     res.status(400).json({ message: "Benutzername existiert bereits" });
   } else {
     const newUser = {
-      id: users.length + 1,
+      id: maxId + 1,
       username,
       password: hashedPassword,
     };
