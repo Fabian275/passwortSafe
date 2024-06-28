@@ -147,8 +147,7 @@ app.post("/register", (req, res) => {
   const { username, password } = req.body;
   const userExists = users.some((u) => u.username === username);
   const hashedPassword = hashPassword(password);
-  let maxId = Math.max(...users.map(user => user.id));
-
+  let maxId = Math.max(...users.map((user) => user.id));
 
   if (userExists) {
     res.status(400).json({ message: "Benutzername existiert bereits" });
@@ -213,6 +212,7 @@ app.post("/addNewPassword", authenticateToken, (req, res) => {
 // get password
 app.get("/getPasswords", authenticateToken, (req, res) => {
   const { user } = req;
+  const { sortBy = "link", order = "asc" } = req.query; // Standardwerte: sortBy='link', order='asc'
 
   const key = user.key;
   try {
@@ -225,6 +225,17 @@ app.get("/getPasswords", authenticateToken, (req, res) => {
       username: decryptValue(entry.username, key),
       password: decryptValue(entry.password, key),
     }));
+
+    decryptedPasswords.sort((a, b) => {
+      const fieldA = a[sortBy];
+      const fieldB = b[sortBy];
+
+      if (order === "asc") {
+        return fieldA.localeCompare(fieldB);
+      } else {
+        return fieldB.localeCompare(fieldA);
+      }
+    });
 
     res.json(decryptedPasswords);
   } catch (error) {

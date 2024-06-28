@@ -41,12 +41,19 @@ const PasswordManager = (props: Props) => {
   }>({});
   const [showPassword, setShowPassword] = React.useState(false);
 
+  const [sortBy, setSortBy] = React.useState("link");
+  const [order, setOrder] = React.useState("desc");
+
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const fetchPasswords = async () => {
     try {
       const response = await axios.get("http://localhost:5001/getPasswords", {
         withCredentials: true,
+        params: {
+          sortBy: sortBy,
+          order: order,
+        },
       });
       setPasswords(response.data);
     } catch (error) {
@@ -56,7 +63,7 @@ const PasswordManager = (props: Props) => {
 
   useEffect(() => {
     fetchPasswords();
-  }, []);
+  }, [sortBy, order]);
 
   const togglePasswordVisibility = (link: string) => {
     setVisiblePasswords((prevState) => ({
@@ -92,6 +99,12 @@ const PasswordManager = (props: Props) => {
     }
   };
 
+  const handleSort = (column: string) => {
+    const newOrder = sortBy === column && order === "asc" ? "desc" : "asc";
+    setSortBy(column);
+    setOrder(newOrder);
+  };
+
   return (
     <div>
       <Nav title={"Passwort-Manager"} setLoggedIn={setLoggedIn} />
@@ -101,9 +114,17 @@ const PasswordManager = (props: Props) => {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Link</TableCell>
-              <TableCell>Benutzername</TableCell>
-              <TableCell>Passwort</TableCell>
+              <TableCell onClick={() => handleSort("link")}>
+                Link {sortBy === "link" && (order === "asc" ? "▲" : "▼")}
+              </TableCell>
+              <TableCell onClick={() => handleSort("username")}>
+                Benutzername
+                {sortBy === "username" && (order === "asc" ? "▲" : "▼")}
+              </TableCell>
+              <TableCell onClick={() => handleSort("password")}>
+                Passwort
+                {sortBy === "password" && (order === "asc" ? "▲" : "▼")}
+              </TableCell>
               <TableCell>Anpassen</TableCell>
             </TableRow>
           </TableHead>
