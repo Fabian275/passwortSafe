@@ -2,7 +2,18 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import { TextField, Button, Typography, Container, Box } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Typography,
+  Container,
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TableCell,
+} from "@mui/material";
 import Nav from "./Nav";
 
 interface Props {
@@ -11,6 +22,7 @@ interface Props {
 
 const UpdateProfile = (props: Props) => {
   const { setLoggedIn } = props;
+  const [category, setCategory] = useState("");
   const [link, setLink] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -29,10 +41,11 @@ const UpdateProfile = (props: Props) => {
       const response = await axios.put(
         "http://localhost:5001/updatePassword",
         {
-          id: id,
+          pwId: id,
           link: link,
           username,
           password,
+          category,
         },
         { withCredentials: true }
       );
@@ -59,6 +72,30 @@ const UpdateProfile = (props: Props) => {
           home={true}
         />
         <Box component="form" sx={{ mt: 1 }}>
+          <FormControl fullWidth>
+            <InputLabel id="category-select-label">Kategorie</InputLabel>
+            <Select
+              labelId="category-select-label"
+              id="category-select"
+              label="Kategorie hinzufügen"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <MenuItem value={"Websites"}>Websites</MenuItem>
+              <MenuItem value={"Software-Lizenzen"}>Software-Lizenzen</MenuItem>
+              <MenuItem value={"Bank"}>Bank</MenuItem>
+              <MenuItem value={"E-Mail-Konten"}>E-Mail-Konten</MenuItem>
+              <MenuItem value={"Soziale Medien"}>Soziale Medien</MenuItem>
+              <MenuItem value={"WLAN-Passwörter"}>WLAN-Passwörter</MenuItem>
+              <MenuItem value={"Identitäten"}>Identitäten</MenuItem>
+              <MenuItem value={"Sicherheitsfragen"}>Sicherheitsfragen</MenuItem>
+              <MenuItem value={"Notizen"}>Notizen</MenuItem>
+              <MenuItem value={"Telefonnummern"}>Telefonnummern</MenuItem>
+              <MenuItem value={"Arbeitskonten"}>Arbeitskonten</MenuItem>
+              <MenuItem value={"Streaming-Dienste"}>Streaming-Dienste</MenuItem>
+              <MenuItem value={"Gesundheitskonten"}>Gesundheitskonten</MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             margin="normal"
             fullWidth

@@ -56,14 +56,18 @@ let passwords = [
     userId: 1,
     entries: [
       {
+        pwId: 1,
         link: encryptValue("google.com", "7c6a180b36896a0a8c02787eeafb0e4c"),
         username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
         password: encryptValue("password1", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        category: "Essen",
       },
       {
+        pwId: 2,
         link: encryptValue("abc.com", "7c6a180b36896a0a8c02787eeafb0e4c"),
         username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
         password: encryptValue("password2", "7c6a180b36896a0a8c02787eeafb0e4c"),
+        category: "Essen",
       },
     ],
   },
@@ -71,9 +75,11 @@ let passwords = [
     userId: 2,
     entries: [
       {
+        pwId: 1,
         link: encryptValue("web.com", "6cb75f652a9b52798eb6cf2201057c73"),
         username: encryptValue("user2name", "6cb75f652a9b52798eb6cf2201057c73"),
         password: encryptValue("password3", "6cb75f652a9b52798eb6cf2201057c73"),
+        category: "Essen",
       },
     ],
   },
@@ -178,7 +184,7 @@ app.post("/register", (req, res) => {
 
 // add new password
 app.post("/addNewPassword", authenticateToken, (req, res) => {
-  const { link, username, password } = req.body;
+  const { link, username, password, category } = req.body;
   const { user } = req;
 
   const key = user.key;
@@ -187,20 +193,31 @@ app.post("/addNewPassword", authenticateToken, (req, res) => {
   const encryptedLink = encryptValue(link, key);
 
   const userPasswords = passwords.find((pw) => pw.userId === req.user.id);
+  let newPwId = 1;
   if (userPasswords) {
+    if (userPasswords.entries.length > 0) {
+      const maxPwId = Math.max(
+        ...userPasswords.entries.map((entry) => entry.pwId)
+      );
+      newPwId = maxPwId + 1;
+    }
     userPasswords.entries.push({
+      pwId: newPwId,
       link: encryptedLink,
       username: encryptedUsername,
       password: encryptedPassword,
+      category: category,
     });
   } else {
     passwords.push({
       userId: req.user.id,
       entries: [
         {
+          pwId: newPwId,
           link: encryptedLink,
           username: encryptedUsername,
           password: encryptedPassword,
+          category: category,
         },
       ],
     });
@@ -212,7 +229,7 @@ app.post("/addNewPassword", authenticateToken, (req, res) => {
 // get password
 app.get("/getPasswords", authenticateToken, (req, res) => {
   const { user } = req;
-  const { sortBy = "link", order = "asc" } = req.query; // Standardwerte: sortBy='link', order='asc'
+  const { sortBy = "link", order = "asc", filterCategory } = req.query;
 
   const key = user.key;
   try {
@@ -220,11 +237,16 @@ app.get("/getPasswords", authenticateToken, (req, res) => {
     if (!userPasswords) {
       return res.json([]);
     }
-    const decryptedPasswords = userPasswords.entries.map((entry) => ({
-      link: decryptValue(entry.link, key),
-      username: decryptValue(entry.username, key),
-      password: decryptValue(entry.password, key),
-    }));
+
+    const decryptedPasswords = userPasswords.entries
+      .map((entry) => ({
+        pwId: entry.pwId,
+        link: decryptValue(entry.link, key),
+        username: decryptValue(entry.username, key),
+        password: decryptValue(entry.password, key),
+        category: entry.category,
+      }))
+      .filter((entry) => !filterCategory || entry.category === filterCategory);
 
     decryptedPasswords.sort((a, b) => {
       const fieldA = a[sortBy];
@@ -248,7 +270,7 @@ app.get("/getPasswords", authenticateToken, (req, res) => {
 
 //update password
 app.put("/updatePassword", authenticateToken, (req, res) => {
-  const { id, link, username, password } = req.body;
+  const { pwId, link, username, password, category } = req.body;
   const { user } = req;
 
   const key = user.key;
@@ -260,13 +282,16 @@ app.put("/updatePassword", authenticateToken, (req, res) => {
   }
 
   const userPasswords = passwords.find((user) => user.userId === req.user.id);
-
   if (userPasswords) {
-    const entry = userPasswords.entries[id];
+    const entry = userPasswords.entries.find(
+      (entry) => entry.pwId === parseInt(pwId)
+    );
+
     if (entry) {
       entry.link = encryptValue(link, key);
       entry.username = encryptValue(username, key);
       entry.password = encryptValue(password, key);
+      entry.category = category;
       res.json({ message: "Passwort aktualisiert", data: passwords });
     } else {
       res.status(404).json({ message: "Eintrag nicht gefunden" });
