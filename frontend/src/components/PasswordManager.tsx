@@ -120,6 +120,16 @@ const PasswordManager = (props: Props) => {
     setOrder(newOrder);
   };
 
+  const handleDelete = async (pwId: number) => {
+    try {
+      const response = await axios.delete("http://localhost:5001/deletePassword", {
+        data: { pwId },
+        withCredentials: true,
+      });
+      setPasswords(passwords.filter((password) => password.pwId !== pwId));
+    } catch (error) {console.log("konnte nicht löschen")}
+  };
+
   return (
     <div>
       <Nav title={"Passwort-Manager"} setLoggedIn={setLoggedIn} />
@@ -178,6 +188,7 @@ const PasswordManager = (props: Props) => {
                 {sortBy === "password" && (order === "asc" ? "▲" : "▼")}
               </TableCell>
               <TableCell>Anpassen</TableCell>
+              <TableCell>Löschen</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -267,6 +278,7 @@ const PasswordManager = (props: Props) => {
                   Hinzufügen
                 </Button>
               </TableCell>
+              <TableCell component="th" scope="row" />
             </TableRow>
             {passwords.map((row, index) => (
               <TableRow
@@ -292,6 +304,16 @@ const PasswordManager = (props: Props) => {
                     onClick={() => navigate(`/update-profile/${row.pwId}`)}
                   >
                     Ändern
+                  </Button>
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      handleDelete(row.pwId);
+                    }}
+                  >
+                    Löschen
                   </Button>
                 </TableCell>
               </TableRow>

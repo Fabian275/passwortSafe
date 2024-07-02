@@ -303,6 +303,31 @@ app.put("/updatePassword", authenticateToken, (req, res) => {
   }
 });
 
+
+app.delete("/deletePassword", authenticateToken, (req, res) => {
+  const { pwId } = req.body;
+
+
+  if (!pwId) {
+    return res.status(400).json({ message: "pwId muss angegeben werden." });
+  }
+
+  const userPasswords = passwords.find((user) => user.userId === req.user.id);
+
+  if (userPasswords) {
+    const entryIndex = userPasswords.entries.findIndex((entry) => entry.pwId === parseInt(pwId));
+    if (entryIndex !== -1) {
+      userPasswords.entries.splice(entryIndex, 1);
+      res.json({ message: "Passwort gelöscht", data: passwords });
+    } else {
+      res.status(404).json({ message: "Eintrag nicht gefunden" });
+    }
+  } else {
+    res.status(404).json({ message: "Keine Passwörter für diesen Benutzer gefunden" });
+  }
+});
+
+
 //logout
 app.post("/logout", (req, res) => {
   res.clearCookie("token");
