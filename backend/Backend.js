@@ -229,7 +229,13 @@ app.post("/addNewPassword", authenticateToken, (req, res) => {
 // get password
 app.get("/getPasswords", authenticateToken, (req, res) => {
   const { user } = req;
-  const { sortBy = "link", order = "asc", filterCategory } = req.query;
+  const {
+    sortBy = "link",
+    order = "asc",
+    filterCategory,
+    page = 1,
+    pageSize = 10,
+  } = req.query;
 
   const key = user.key;
   try {
@@ -259,7 +265,16 @@ app.get("/getPasswords", authenticateToken, (req, res) => {
       }
     });
 
-    res.json(decryptedPasswords);
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = page * pageSize;
+    const paginatedPasswords = decryptedPasswords.slice(startIndex, endIndex);
+
+    res.json({
+      totalItems: decryptedPasswords.length,
+      totalPages: Math.ceil(decryptedPasswords.length / pageSize),
+      currentPage: parseInt(page),
+      passwords: paginatedPasswords,
+    });
   } catch (error) {
     res.status(500).json({
       message: "Fehler beim Entschlüsseln der Daten",
@@ -303,10 +318,8 @@ app.put("/updatePassword", authenticateToken, (req, res) => {
   }
 });
 
-
 app.delete("/deletePassword", authenticateToken, (req, res) => {
   const { pwId } = req.body;
-
 
   if (!pwId) {
     return res.status(400).json({ message: "pwId muss angegeben werden." });
@@ -315,7 +328,9 @@ app.delete("/deletePassword", authenticateToken, (req, res) => {
   const userPasswords = passwords.find((user) => user.userId === req.user.id);
 
   if (userPasswords) {
-    const entryIndex = userPasswords.entries.findIndex((entry) => entry.pwId === parseInt(pwId));
+    const entryIndex = userPasswords.entries.findIndex(
+      (entry) => entry.pwId === parseInt(pwId)
+    );
     if (entryIndex !== -1) {
       userPasswords.entries.splice(entryIndex, 1);
       res.json({ message: "Passwort gelöscht", data: passwords });
@@ -323,10 +338,11 @@ app.delete("/deletePassword", authenticateToken, (req, res) => {
       res.status(404).json({ message: "Eintrag nicht gefunden" });
     }
   } else {
-    res.status(404).json({ message: "Keine Passwörter für diesen Benutzer gefunden" });
+    res
+      .status(404)
+      .json({ message: "Keine Passwörter für diesen Benutzer gefunden" });
   }
 });
-
 
 //logout
 app.post("/logout", (req, res) => {

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -16,10 +16,11 @@ import {
   OutlinedInput,
   Select,
   TextField,
+  TablePagination,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Password, Visibility, VisibilityOff } from "@mui/icons-material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import Nav from "./Nav";
 
 interface PasswordData {
@@ -31,7 +32,7 @@ interface PasswordData {
 }
 
 interface Props {
-  setLoggedIn: Dispatch<SetStateAction<boolean>>;
+  setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const PasswordManager = (props: Props) => {
@@ -50,10 +51,13 @@ const PasswordManager = (props: Props) => {
   const [sortBy, setSortBy] = useState("link");
   const [order, setOrder] = useState("desc");
   const [filterCategory, setFilterCategory] = useState("");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const fetchPasswords = async () => {
+  const fetchPasswords = async (page: number, rowsPerPage: number) => {
     try {
       const response = await axios.get("http://localhost:5001/getPasswords", {
         withCredentials: true,
@@ -61,17 +65,20 @@ const PasswordManager = (props: Props) => {
           sortBy: sortBy,
           order: order,
           filterCategory: filterCategory,
+          page: page + 1,
+          pageSize: rowsPerPage,
         },
       });
-      setPasswords(response.data);
+      setPasswords(response.data.passwords);
+      setTotalItems(response.data.totalItems);
     } catch (error) {
       console.error("Fehler beim Holen der Passwörter:", error);
     }
   };
 
   useEffect(() => {
-    fetchPasswords();
-  }, [sortBy, order, filterCategory]);
+    fetchPasswords(page, rowsPerPage);
+  }, [sortBy, order, filterCategory, page, rowsPerPage]);
 
   const togglePasswordVisibility = (link: string) => {
     setVisiblePasswords((prevState) => ({
@@ -85,7 +92,6 @@ const PasswordManager = (props: Props) => {
   };
 
   const addNewPW = async (e: any) => {
-    console.log(e);
     try {
       if (
         link !== "" &&
@@ -103,7 +109,7 @@ const PasswordManager = (props: Props) => {
           },
           { withCredentials: true }
         );
-        fetchPasswords();
+        fetchPasswords(page, rowsPerPage);
         setLink("");
         setUsername("");
         setPassword("");
@@ -122,12 +128,28 @@ const PasswordManager = (props: Props) => {
 
   const handleDelete = async (pwId: number) => {
     try {
-      const response = await axios.delete("http://localhost:5001/deletePassword", {
-        data: { pwId },
-        withCredentials: true,
-      });
-      setPasswords(passwords.filter((password) => password.pwId !== pwId));
-    } catch (error) {console.log("konnte nicht löschen")}
+      const response = await axios.delete(
+        "http://localhost:5001/deletePassword",
+        {
+          data: { pwId },
+          withCredentials: true,
+        }
+      );
+      fetchPasswords(page, rowsPerPage);
+    } catch (error) {
+      console.log("konnte nicht löschen", error);
+    }
+  };
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   return (
@@ -280,7 +302,7 @@ const PasswordManager = (props: Props) => {
               </TableCell>
               <TableCell component="th" scope="row" />
             </TableRow>
-            {passwords.map((row, index) => (
+            {passwords.map((row) => (
               <TableRow
                 key={row.pwId}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -309,9 +331,7 @@ const PasswordManager = (props: Props) => {
                 <TableCell>
                   <Button
                     variant="contained"
-                    onClick={() => {
-                      handleDelete(row.pwId);
-                    }}
+                    onClick={() => handleDelete(row.pwId)}
                   >
                     Löschen
                   </Button>
@@ -320,6 +340,15 @@ const PasswordManager = (props: Props) => {
             ))}
           </TableBody>
         </Table>
+        <TablePagination
+          rowsPerPageOptions={[10, 20, 30]}
+          component="div"
+          count={totalItems}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </TableContainer>
     </div>
   );
