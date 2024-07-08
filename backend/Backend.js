@@ -60,14 +60,14 @@ let passwords = [
         link: encryptValue("google.com", "7c6a180b36896a0a8c02787eeafb0e4c"),
         username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
         password: encryptValue("password1", "7c6a180b36896a0a8c02787eeafb0e4c"),
-        category: "Essen",
+        category: "Websites",
       },
       {
         pwId: 2,
         link: encryptValue("abc.com", "7c6a180b36896a0a8c02787eeafb0e4c"),
         username: encryptValue("user1name", "7c6a180b36896a0a8c02787eeafb0e4c"),
         password: encryptValue("password2", "7c6a180b36896a0a8c02787eeafb0e4c"),
-        category: "Essen",
+        category: "Bank",
       },
     ],
   },
@@ -79,7 +79,7 @@ let passwords = [
         link: encryptValue("web.com", "6cb75f652a9b52798eb6cf2201057c73"),
         username: encryptValue("user2name", "6cb75f652a9b52798eb6cf2201057c73"),
         password: encryptValue("password3", "6cb75f652a9b52798eb6cf2201057c73"),
-        category: "Essen",
+        category: "Notizen",
       },
     ],
   },
@@ -282,6 +282,45 @@ app.get("/getPasswords", authenticateToken, (req, res) => {
     });
   }
 });
+
+//get one password
+app.get("/getOnePassword", authenticateToken, (req, res) => {
+  const { user } = req;
+  const { pwId } = req.query;
+
+  if (!pwId) {
+    return res.status(400).json({ message: "pwId muss angegeben werden." });
+  }
+
+  const key = user.key;
+  try {
+    const userPasswords = passwords.find((pw) => pw.userId === req.user.id);
+    if (!userPasswords) {
+      return res.status(404).json({ message: "Keine Passwörter gefunden." });
+    }
+
+    const entry = userPasswords.entries.find((entry) => entry.pwId === parseInt(pwId));
+    if (!entry) {
+      return res.status(404).json({ message: "Passwort nicht gefunden." });
+    }
+
+    const decryptedPassword = {
+      pwId: entry.pwId,
+      link: decryptValue(entry.link, key),
+      username: decryptValue(entry.username, key),
+      password: decryptValue(entry.password, key),
+      category: entry.category,
+    };
+
+    res.json(decryptedPassword);
+  } catch (error) {
+    res.status(500).json({
+      message: "Fehler beim Entschlüsseln der Daten",
+      error: error.message,
+    });
+  }
+});
+
 
 //update password
 app.put("/updatePassword", authenticateToken, (req, res) => {

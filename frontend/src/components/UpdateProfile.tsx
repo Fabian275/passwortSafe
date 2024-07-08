@@ -1,4 +1,3 @@
-// src/components/UpdateProfile.tsx
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
@@ -13,8 +12,11 @@ import {
   MenuItem,
   Select,
   TableCell,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
 import Nav from "./Nav";
+import { VisibilityOff, Visibility } from "@mui/icons-material";
 
 interface Props {
   setLoggedIn: Dispatch<SetStateAction<boolean>>;
@@ -27,6 +29,9 @@ const UpdateProfile = (props: Props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -55,6 +60,27 @@ const UpdateProfile = (props: Props) => {
       setMessage("Aktualisierung fehlgeschlagen");
     }
   };
+
+  const fetchPassword = async () => {
+    try {
+      const response = await axios.get("http://localhost:5001/getOnePassword", {
+        withCredentials: true,
+        params: {
+          pwId: id,
+        },
+      });
+      setCategory(response.data.category);
+      setLink(response.data.link);
+      setUsername(response.data.username);
+      setPassword(response.data.password);
+    } catch (error) {
+      console.error("Fehler beim Holen der Passwörter:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPassword();
+  }, []);
 
   return (
     <Container maxWidth="xs">
@@ -119,13 +145,25 @@ const UpdateProfile = (props: Props) => {
           <TextField
             margin="normal"
             fullWidth
-            name="password"
+            id="outlined-adornment-password"
             label="Neues Passwort"
-            type="password"
-            id="password"
-            autoComplete="current-password"
+            variant="outlined"
+            type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword((show) => !show)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
 
           <Button
@@ -136,6 +174,22 @@ const UpdateProfile = (props: Props) => {
             onClick={handleUpdate}
           >
             Aktualisieren
+          </Button>
+          <Button
+            fullWidth
+            variant="contained"
+            sx={{
+              mt: 3,
+              mb: 2,
+              backgroundColor: "red",
+              color: "white",
+              "&:hover": { backgroundColor: "darkred" },
+            }}
+            onClick={() => {
+              navigate("/password-manager");
+            }}
+          >
+            Abbrechen
           </Button>
           {message && <Typography color="error">{message}</Typography>}
         </Box>
