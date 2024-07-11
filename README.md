@@ -165,24 +165,23 @@ Funktionale Programmierung
   deklarative Programmierung
     - Deklarative Programmierung beschreibt was ein Programm tun soll, ohne die genauen Schritte zur Ausführung anzugeben. Dies führt
       zu lesbarerem und wartbarem Code. Paging in Webanwendungen ermöglicht das Anzeigen großer Datenmengen in übersichtlichen Portionen. Deklarative Programmierung vereinfacht die Implementierung und Wartung der Paging-Logik.
-
+      ```js
       .slice()
       .map()
       .filter()
-
+      ```
       - Backend Part
       ![alt text](image-5.png)
       - Frontend Part
       ![alt text](image-6.png)
-      Aber hier fehlt natürlich noch einen Teil, aber der Kern ist diese par Zeilen Code
+      Aber hier fehlt natürlich noch einen Teil, aber der Kern ist diese paar Zeilen Code
 
-  Lambda-Ausdrücke
-    - Lambda-Ausdrücke, auch bekannt als Pfeilfunktionen (Arrow Functions), sind eine kompakte Art, Funktionen in JavaScript
-      zu schreiben.
-
-      Arrow Function:
-      Wir haben diese Variante einer Funktion genutzt, weil es einfach zu lesen ist und sehr kompkat ist, wie oben schon beschrieben.
-      ![alt text](image-10.png)
+Lambda-Ausdrücke
+  - Lambda-Ausdrücke, auch bekannt als Pfeilfunktionen (Arrow Functions), sind eine kompakte Art, Funktionen in JavaScript
+    zu schreiben.
+  - Arrow Function:
+    Wir haben diese Variante einer Funktion genutzt, weil es einfach zu lesen ist und sehr kompkat ist, wie oben schon beschrieben.
+    ![alt text](image-10.png)
 
 
 - .find()
@@ -212,6 +211,4 @@ Jannis: Ich fand diesen Teil des projekts sehr spannend.Iich lernte neue Sache, 
 
 Jonathan: Dieser part der Projekt arbeit hat auch sehr viel spass gemacht da ich einiges noch lernen konnte. Ich hatte zuvor mühe richtig zu verstehen wie higher-order-functions funktionieren allerdings war es dan relativ einfach zu verstehen für was man dies braucht und wie es funktioniert alls ich es praktisch anwenden konnte. Die zusammenarbeit mit Fabian und Jannis lief auch sehr gut.
 
-Fabian: 
-
-In diesem Teil des Projekts konnte ich viel über die deklarative Programmierung lernen. Es hat mich sehr weiter gebracht, da ich mit einigen Problemen kämpfen musste. Wir konnten in unserer Gruppe die Aufgaben gut auf unsere Stärken aufteilen, um möglichst effizient die Aufgaben zu erledigen.
+Fabian: In diesem Teil des Projekts konnte ich viel über die deklarative Programmierung lernen. Es hat mich sehr weiter gebracht, da ich mit einigen Problemen kämpfen musste. Wir konnten in unserer Gruppe die Aufgaben gut auf unsere Stärken aufteilen, um möglichst effizient die Aufgaben zu erledigen.
