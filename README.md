@@ -120,3 +120,98 @@ Relfexion:
 
 - Fabian:
   Ich fand das Projekt sehr spannend und habe sehr viel über das Thema Verschlüsselung, hashing und Docker gelernt. Zudem habe ich auch gelernt, wie man ein Login sicher machen kann. Ich hatte am Anfang etwas Schwierigkeiten mit den CORS und bekam immer wieder Errors. Dies konnte ich aber gut lösen. Am Anfang des Projekts habe ich alles dockerisiert, um alles einfach starten zu können.
+
+
+
+
+
+
+Funktionale Programmierung
+
+  Pure functions
+  - Eine pure function (reine Funktion) ist eine Funktion, deren Ausgabe nur von ihren Eingabewerten abhängt und die keine Seiteneffekte hat. Das bedeutet, dass sie keine Zustandsänderungen außerhalb ihrer eigenen Ausführung verursacht.
+
+  In unserem Beispiel haben wir zwei Funktionen zur Verschlüsselung und Entschlüsselung implementiert:
+
+  encryptValue: Verschlüsselt einen Klartext mithilfe von AES-256-CBC.
+  ![alt text](image-1.png)
+
+  decryptValue: Entschlüsselt einen verschlüsselten Text zurück in den Klartext.
+  ![alt text](image.png)
+
+
+  immutable values
+  - Immutable Functions sind Funktionen, die die Daten, die sie erhalten, nicht ändern. 
+    Stattdessen erzeugen sie neue   Datenstrukturen mit den gewünschten Änderungen.
+
+    In unserem Beispiel zeigen wir, wie eine immutable Funktion genutzt werden kann, um ein Array zu filtern. Dabei wird das ursprüngliche Array nicht verändert. 
+
+    Wir Slicen die liste von Passwörtern. Dort holen wir uns den ersten und letzten index. Dadurch kann man später dann sagen wie viel pro Seite angezeigt werden sollen.
+    ![alt text](image-7.png)
+
+  higher-order-functions
+  - Higher-Order Functions sind Funktionen, die andere Funktionen als Argumente nehmen oder Funktionen zurückgeben. 
+    Sie ermöglichen eine funktionale Programmierung, bei der Funktionen auf andere Funktionen angewendet werden können.
+
+    Für unser Beispiel haben wir einen Post Endpoint funktion erstellt, welcher eine Funktion als Parameter erhält. Diese Funktion prüft ob man eingeloggt ist. Das Resultat wird an den Post Request weitergeleitet. Dieser Entscheidet ob man dann eingeloggt wird oder nicht.
+
+    ![alt text](image-8.png)
+
+    ![alt text](image-9.png)
+
+
+
+
+  deklarative Programmierung
+    - Deklarative Programmierung beschreibt was ein Programm tun soll, ohne die genauen Schritte zur Ausführung anzugeben. Dies führt
+      zu lesbarerem und wartbarem Code. Paging in Webanwendungen ermöglicht das Anzeigen großer Datenmengen in übersichtlichen Portionen. Deklarative Programmierung vereinfacht die Implementierung und Wartung der Paging-Logik.
+
+      .slice()
+      .map()
+      .filter()
+
+      - Backend Part
+      ![alt text](image-5.png)
+      - Frontend Part
+      ![alt text](image-6.png)
+      Aber hier fehlt natürlich noch einen Teil, aber der Kern ist diese par Zeilen Code
+
+  Lambda-Ausdrücke
+    - Lambda-Ausdrücke, auch bekannt als Pfeilfunktionen (Arrow Functions), sind eine kompakte Art, Funktionen in JavaScript
+      zu schreiben.
+
+      Arrow Function:
+      Wir haben diese Variante einer Funktion genutzt, weil es einfach zu lesen ist und sehr kompkat ist, wie oben schon beschrieben.
+      ![alt text](image-10.png)
+
+
+- .find()
+  - Sucht in einem Array nach einem Element, das eine bestimmte Bedingung erfüllt, und gibt das erste gefundene Element zurück.
+  - const result = array.find(callback(element[, index[, array]]));
+- .map()
+  - Erstellt ein neues Array, indem es eine Funktion auf jedes Element des ursprünglichen Arrays anwendet.
+  - const newArray = array.map(callback(element[, index[, array]]));
+- .sort()
+  - Sortiert die Elemente eines Arrays in-place und gibt das Array zurück. Die Sortierreihenfolge kann durch eine Vergleichsfunktion definiert werden.
+  - array.sort([compareFunction]);
+- .filter()
+  - Erstellt ein neues Array mit allen Elementen, die eine bestimmte Bedingung erfüllen.
+  - const newArray = array.filter(callback(element[, index[, array]]));
+- .slice()
+  - Erstellt ein flaches neues Array mit einem Teil des ursprünglichen Arrays, beginnend bei einem bestimmten Index und bis zu (aber nicht einschließlich) einem anderen Index.
+  - const newArray = array.slice([begin[, end]]);
+- .findIndex()
+  - Sucht in einem Array nach einem Element, das eine bestimmte Bedingung erfüllt, und gibt den Index des ersten gefundenen Elements zurück. Gibt -1 zurück, wenn kein Element gefunden wird.
+  - const index = array.findIndex(callback(element[, index[, array]]));
+
+Diese Methoden sind äußerst nützlich bei der Arbeit mit Arrays in React, insbesondere bei der Verwaltung und Darstellung von Zustandsdaten, welche wir brauchten, weil wir alle unsere Daten in Array und listen ausgeben.
+
+Reflexion:
+
+Jannis: Ich fand diesen Teil des projekts sehr spannend.Iich lernte neue Sache, wie zb das Pagin und noch vieles weiteres über React/  Express. Auch in diesem Projekt machte die Arbeit mit Fabian und Jonathan sehr spass. SIe haben beide gut gearbeitet und sich für das Projekt eingesetzt. Dieses Projekt hat sehr spass gemacht und ich fand es einen guten Weg, um zu lernen.
+
+Jonathan: Dieser part der Projekt arbeit hat auch sehr viel spass gemacht da ich einiges noch lernen konnte. Ich hatte zuvor mühe richtig zu verstehen wie higher-order-functions funktionieren allerdings war es dan relativ einfach zu verstehen für was man dies braucht und wie es funktioniert alls ich es praktisch anwenden konnte. Die zusammenarbeit mit Fabian und Jannis lief auch sehr gut.
+
+Fabian: 
+
+In diesem Teil des Projekts konnte ich viel über die deklarative Programmierung lernen. Es hat mich sehr weiter gebracht, da ich mit einigen Problemen kämpfen musste. Wir konnten in unserer Gruppe die Aufgaben gut auf unsere Stärken aufteilen, um möglichst effizient die Aufgaben zu erledigen.
